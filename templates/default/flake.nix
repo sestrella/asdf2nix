@@ -1,6 +1,8 @@
 {
   inputs = {
+    # TODO: Change to GH url
     asdf-nix.url = "path:../..";
+    # TODO: Change to GH url
     asdf-python.url = "path:../../plugins/python";
     flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
