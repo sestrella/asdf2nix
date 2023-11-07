@@ -1,8 +1,10 @@
 {
-  description = "A very basic flake";
-
   outputs = { self }: {
-    lib.packagesFromToolVersions = { toolVersions }:
+    lib.packagesFromToolVersions =
+      { toolVersions
+      , system ? builtins.currentSystem
+      , plugins ? { }
+      }:
       let
         mkVersion = rawVersion:
           let
@@ -12,11 +14,32 @@
             name = builtins.elemAt pluginAndVersion 0;
             value = builtins.elemAt pluginAndVersion 2;
           };
+        mkPackage = plugin: version: (plugins.${plugin} or throw ''
+          No plugin found for "${plugin}", try passing it through the plugins
+          attribute:
+
+          ```
+          lib.packagesFromToolVersions {
+            plugins = {
+              ${plugin} = asdf-${plugin}.lib.packageFromVersion;
+              ...
+            };
+            ...
+          };
+          ```
+
+          Where "asdf-${plugin}" is an input:
+
+          ```
+          inputs.asdf-${plugin}.url = "...";
+          ```
+        '') { inherit system version; };
+        versions = builtins.listToAttrs
+          (builtins.map mkVersion
+            (builtins.filter (x: x != [ ] && x != "")
+              (builtins.split "\n"
+                (builtins.readFile toolVersions))));
       in
-      builtins.listToAttrs
-        (builtins.map mkVersion
-          (builtins.filter (x: x != [ ] && x != "")
-            (builtins.split "\n"
-              (builtins.readFile toolVersions))));
+      builtins.mapAttrs mkPackage versions;
   };
 }
