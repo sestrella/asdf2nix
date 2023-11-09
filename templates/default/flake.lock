@@ -3,7 +3,7 @@
     "asdf-nix": {
       "locked": {
         "lastModified": 0,
-        "narHash": "sha256-ACA3sRZytwd6OdJ7GB0/pUoUpMekQ2smjExD6msklMw=",
+        "narHash": "sha256-nc5ygot2KXOqFyj5KDpaiUogy/90NbnJMBizA7D811Y=",
         "path": "../..",
         "type": "path"
       },

@@ -22,8 +22,7 @@
           in
           if skipMissingPlugins
           then builtins.traceVerbose (if hasPlugin then "Plugin ${name} found" else "Skipping plugin ${name}") hasPlugin
-          else if hasPlugin then true else
-          throw ''
+          else hasPlugin || throw ''
             No plugin found for "${name}", try adding the missing plugin:
 
             ```
