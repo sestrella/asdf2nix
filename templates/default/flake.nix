@@ -21,9 +21,8 @@
         };
       in
       {
-        devShells.default = pkgs.mkShell
-          {
-            buildInputs = [ packages.python ];
-          };
+        devShells.default = pkgs.mkShell {
+          buildInputs = [ packages.python ];
+        };
       });
 }
