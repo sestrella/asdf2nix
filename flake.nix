@@ -4,6 +4,7 @@
       { toolVersions
       , system ? builtins.currentSystem
       , plugins ? { }
+      , skipMissingPlugins ? false
       }:
       let
         mkVersion = rawVersion:
@@ -34,11 +35,42 @@
         #   inputs.asdf-${plugin}.url = "...";
         #   ```
         # '')) { inherit system version; };
-        versions = builtins.listToAttrs
-          (builtins.map mkVersion
-            (builtins.filter (x: x != [ ] && x != "")
-              (builtins.split "\n"
-                (builtins.readFile toolVersions))));
+        foo = { name, ... }:
+          let
+            hasPlugin = builtins.hasAttr name plugins;
+          in
+          if skipMissingPlugins
+          then builtins.traceVerbose (if hasPlugin then "Plugin ${name} found" else "Skipping plugin ${name}") hasPlugin
+          else if hasPlugin then true else throw ''
+            No plugin found for "${name}", try adding the missing plugin:
+
+            ```
+            asdf2nix.lib.packagesFromToolVersions = {
+              plugins = {
+                ${name} = asdf-${name}.lib.packageFromVersion;
+                ...
+              };
+              ...
+            };
+            ```
+
+            Or enable `skipMissingPlugins` to skip this error:
+
+            ```
+            asdf2nix.lib.packagesFromToolVersions = {
+              plugins = { ... };
+              skipMissingPlugins = true;
+              ...
+            };
+            ```
+          '';
+        versions =
+          builtins.listToAttrs
+            (builtins.filter foo
+              (builtins.map mkVersion
+                (builtins.filter (x: x != [ ] && x != "")
+                  (builtins.split "\n"
+                    (builtins.readFile toolVersions)))));
       in
       builtins.mapAttrs mkPackage versions;
   };

@@ -18,11 +18,12 @@
           plugins = {
             python = asdf-python.lib.packageFromVersion;
           };
+          skipMissingPlugins = false;
         };
       in
       {
         devShells.default = pkgs.mkShell {
-          buildInputs = [ packages.python ];
+          buildInputs = [ (builtins.attrValues packages) ];
         };
       });
 }
