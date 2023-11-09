@@ -16,32 +16,14 @@
             value = builtins.elemAt pluginAndVersion 2;
           };
         mkPackage = plugin: version: plugins.${plugin} { inherit system version; };
-        #   No plugin found for "${plugin}", try passing it through the plugins
-        #   attribute:
-        #
-        #   ```
-        #   lib.packagesFromToolVersions {
-        #     plugins = {
-        #       ${plugin} = asdf-${plugin}.lib.packageFromVersion;
-        #       ...
-        #     };
-        #     ...
-        #   };
-        #   ```
-        #
-        #   Where "asdf-${plugin}" is an input:
-        #
-        #   ```
-        #   inputs.asdf-${plugin}.url = "...";
-        #   ```
-        # '')) { inherit system version; };
-        foo = { name, ... }:
+        checkPlugin = { name, ... }:
           let
             hasPlugin = builtins.hasAttr name plugins;
           in
           if skipMissingPlugins
           then builtins.traceVerbose (if hasPlugin then "Plugin ${name} found" else "Skipping plugin ${name}") hasPlugin
-          else if hasPlugin then true else throw ''
+          else if hasPlugin then true else
+          throw ''
             No plugin found for "${name}", try adding the missing plugin:
 
             ```
@@ -66,7 +48,7 @@
           '';
         versions =
           builtins.listToAttrs
-            (builtins.filter foo
+            (builtins.filter checkPlugin
               (builtins.map mkVersion
                 (builtins.filter (x: x != [ ] && x != "")
                   (builtins.split "\n"
