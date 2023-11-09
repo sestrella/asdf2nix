@@ -18,7 +18,6 @@
           plugins = {
             python = asdf-python.lib.packageFromVersion;
           };
-          skipMissingPlugins = false;
         };
       in
       {
