@@ -1,5 +1,5 @@
 let
-  lib = (builtins.getFlake (builtins.toString ./.)).lib;
+  lib = (builtins.getFlake (builtins.toString ./../../../plugins/python)).lib;
 in
 [
   {

@@ -13,3 +13,4 @@ jobs:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v23
       - run: nix eval --impure .#tests
+        working-directory: tests
