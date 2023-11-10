@@ -23,14 +23,14 @@ in
   }
   {
     name = "When skipMissingPlugins is false and plugins is defined";
-    actual = asdf2nix.lib.packagesFromToolVersions {
+    actual = builtins.tryEval (asdf2nix.lib.packagesFromToolVersions {
       toolVersions = ./.tool-versions;
       plugins = {
         python = { version, ... }: version;
       };
       skipMissingPlugins = false;
-    };
-    expected = { python = "3.12.0"; };
+    });
+    expected = { success = false; value = false; };
   }
   {
     name = "When skipMissingPlugins is false and plugins is not defined";
