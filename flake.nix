@@ -1,5 +1,7 @@
 {
-  outputs = { self }: {
+  inputs.nixtest.url = "github:jetpack-io/nixtest";
+
+  outputs = { self, nixtest }: {
     lib.packagesFromToolVersions =
       { toolVersions
       , system ? builtins.currentSystem
@@ -54,5 +56,7 @@
                     (builtins.readFile toolVersions)))));
       in
       builtins.mapAttrs mkPackage versions;
+
+    tests = nixtest.run ./tests;
   };
 }
