@@ -57,6 +57,6 @@
       in
       builtins.mapAttrs mkPackage versions;
 
-    tests = nixtest.run ./tests;
+    tests = nixtest.run ./.;
   };
 }

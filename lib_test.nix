@@ -1,10 +1,10 @@
 let
-  asdf2nix = (builtins.getFlake (builtins.toString ./..));
+  lib = (builtins.getFlake (builtins.toString ./.)).lib;
 in
 [
   {
     name = "When skipMissingPlugins is true and plugins is defined";
-    actual = asdf2nix.lib.packagesFromToolVersions {
+    actual = lib.packagesFromToolVersions {
       toolVersions = ./.tool-versions;
       plugins = {
         python = { version, ... }: version;
@@ -15,7 +15,7 @@ in
   }
   {
     name = "When skipMissingPlugins is true and plugins is not defined";
-    actual = asdf2nix.lib.packagesFromToolVersions {
+    actual = lib.packagesFromToolVersions {
       toolVersions = ./.tool-versions;
       skipMissingPlugins = true;
     };
@@ -23,7 +23,7 @@ in
   }
   {
     name = "When skipMissingPlugins is false and plugins is defined";
-    actual = builtins.tryEval (asdf2nix.lib.packagesFromToolVersions {
+    actual = builtins.tryEval (lib.packagesFromToolVersions {
       toolVersions = ./.tool-versions;
       plugins = {
         python = { version, ... }: version;
@@ -34,7 +34,7 @@ in
   }
   {
     name = "When skipMissingPlugins is false and plugins is not defined";
-    actual = builtins.tryEval (asdf2nix.lib.packagesFromToolVersions {
+    actual = builtins.tryEval (lib.packagesFromToolVersions {
       toolVersions = ./.tool-versions;
       skipMissingPlugins = false;
     });
