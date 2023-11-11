@@ -1,7 +1,7 @@
 {
   outputs = { self }: {
-    lib.packagesFromToolVersions =
-      { toolVersions
+    lib.packagesFromVersionsFile =
+      { versionsFile
       , system ? builtins.currentSystem
       , plugins ? { }
       , skipMissingPlugins ? false
@@ -51,7 +51,7 @@
               (builtins.map mkVersion
                 (builtins.filter (x: x != [ ] && x != "")
                   (builtins.split "\n"
-                    (builtins.readFile toolVersions)))));
+                    (builtins.readFile versionsFile)))));
       in
       builtins.mapAttrs mkPackage versions;
   };
