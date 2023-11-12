@@ -13,7 +13,7 @@
         , skipMissingPlugins ? false
         }:
         let
-          fileLines = file: builtins.split "\n" (builtins.readFile file);
+          fileLines = file: builtins.split "\n" (lib.fileContents file);
           parseVersions = builtins.map
             (line:
               let
