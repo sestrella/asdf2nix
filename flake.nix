@@ -60,7 +60,6 @@
             (filterPlugins
               (parseVersions
                 (builtins.filter (x: x != [ ])
-                  (builtins.split "\n"
-                    (lib.fileContents versionsFile))))));
+                  (fileLines versionsFile)))));
     };
 }
