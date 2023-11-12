@@ -7,7 +7,6 @@
     in
     {
       lib.packagesFromVersionsFile =
-
         { versionsFile
         , system ? builtins.currentSystem
         , plugins ? { }
