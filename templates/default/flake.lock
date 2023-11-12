@@ -1,20 +1,5 @@
 {
   "nodes": {
-    "asdf-nix": {
-      "inputs": {
-        "nixpkgs-lib": "nixpkgs-lib"
-      },
-      "locked": {
-        "lastModified": 0,
-        "narHash": "sha256-Od9HlXG1hYQs7PFAiUbMKrDEZPwp3XsFAgg2+lZFLEc=",
-        "path": "../..",
-        "type": "path"
-      },
-      "original": {
-        "path": "../..",
-        "type": "path"
-      }
-    },
     "asdf-python": {
       "inputs": {
         "nixpkgs-python": "nixpkgs-python"
@@ -27,6 +12,21 @@
       },
       "original": {
         "path": "../../plugins/python",
+        "type": "path"
+      }
+    },
+    "asdf2nix": {
+      "inputs": {
+        "nixpkgs-lib": "nixpkgs-lib"
+      },
+      "locked": {
+        "lastModified": 0,
+        "narHash": "sha256-K7RTCFh0H5vOENol+LwB+5N6taJfFB4eIoOdfPIns4c=",
+        "path": "../..",
+        "type": "path"
+      },
+      "original": {
+        "path": "../..",
         "type": "path"
       }
     },
@@ -153,8 +153,8 @@
     },
     "root": {
       "inputs": {
-        "asdf-nix": "asdf-nix",
         "asdf-python": "asdf-python",
+        "asdf2nix": "asdf2nix",
         "flake-utils": "flake-utils_2",
         "nixpkgs": "nixpkgs_2"
       }
