@@ -12,9 +12,9 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        packages = asdf-nix.lib.packagesFromToolVersions {
+        packages = asdf-nix.lib.packagesFromVersionsFile {
           inherit system;
-          toolVersions = ./.tool-versions;
+          versionsFile = ./.tool-versions;
           plugins = {
             python = asdf-python.lib.packageFromVersion;
           };
