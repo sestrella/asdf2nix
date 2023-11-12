@@ -34,9 +34,9 @@
                   No plugin found for "${name}", try adding the missing plugin:
 
                   ```
-                  packagesFromVersionsFile {
+                  asdf2nix.lib.packagesFromVersionsFile {
                     plugins = {
-                      ${name} = asdf-${name}.lib.packageFromVersion;
+                      ${name} = asdf2nix-${name}.lib.packageFromVersion;
                       ...
                     };
                     ...
@@ -46,7 +46,7 @@
                   Or enable `skipMissingPlugins` to skip this error:
 
                   ```
-                  packagesFromVersionsFile {
+                  asdf2nix.lib.packagesFromVersionsFile {
                     plugins = { ... };
                     skipMissingPlugins = true;
                     ...

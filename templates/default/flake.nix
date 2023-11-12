@@ -18,6 +18,7 @@
           plugins = {
             python = asdf2nix-python.lib.packageFromVersion;
           };
+          skipMissingPlugins = true;
         };
       in
       {
