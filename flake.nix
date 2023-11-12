@@ -45,14 +45,13 @@
             };
             ```
           '';
-        versions =
-          builtins.listToAttrs
-            (builtins.filter checkPlugin
-              (builtins.map mkVersion
-                (builtins.filter (x: x != [ ] && x != "")
-                  (builtins.split "\n"
-                    (builtins.readFile versionsFile)))));
       in
-      builtins.mapAttrs mkPackage versions;
+      builtins.mapAttrs mkPackage
+        (builtins.listToAttrs
+          (builtins.filter checkPlugin
+            (builtins.map mkVersion
+              (builtins.filter (x: x != [ ] && x != "")
+                (builtins.split "\n"
+                  (builtins.readFile versionsFile))))));
   };
 }
