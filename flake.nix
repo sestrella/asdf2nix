@@ -13,8 +13,8 @@
         , skipMissingPlugins ? false
         }:
         let
-          fileLines = file: builtins.split "\n" (lib.fileContents file);
-          removeComments = builtins.filter (line: line != [ ] && !lib.hasPrefix "#" line);
+          fileLines = file: lib.splitString "\n" (lib.fileContents file);
+          removeComments = builtins.filter (line: !lib.hasPrefix "#" line);
           parseVersions = builtins.map
             (line:
               let
