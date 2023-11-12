@@ -7,6 +7,7 @@
       , skipMissingPlugins ? false
       }:
       let
+        fileLines = file: builtins.split "\n" (builtins.readFile file);
         mkVersion = rawVersion:
           let
             pluginAndVersion = builtins.split " " rawVersion;
