@@ -34,7 +34,7 @@
                   No plugin found for "${name}", try adding the missing plugin:
 
                   ```
-                  asdf2nix.lib.packagesFromToolVersions = {
+                  packagesFromVersionsFile {
                     plugins = {
                       ${name} = asdf-${name}.lib.packageFromVersion;
                       ...
@@ -46,13 +46,15 @@
                   Or enable `skipMissingPlugins` to skip this error:
 
                   ```
-                  asdf2nix.lib.packagesFromToolVersions = {
+                  packagesFromVersionsFile {
                     plugins = { ... };
                     skipMissingPlugins = true;
                     ...
                   };
                   ```
                 ''
+                lib.warnIf
+                (!hasPlugin) "Skipping \"${name}\" plugin"
                 hasPlugin);
           findPackage = plugin: version: plugins.${plugin} {
             inherit system version;
