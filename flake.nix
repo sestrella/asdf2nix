@@ -34,7 +34,7 @@
                   No plugin found for "${name}", try adding the missing plugin:
 
                   ```
-                  asdf2nix.lib.packagesFromVersionsFile {
+                  <asdf2nix>.lib.packagesFromVersionsFile {
                     plugins = {
                       ${name} = asdf2nix-${name}.lib.packageFromVersion;
                       ...
@@ -46,7 +46,7 @@
                   Or enable `skipMissingPlugins` to skip this error:
 
                   ```
-                  asdf2nix.lib.packagesFromVersionsFile {
+                  <asdf2nix>.lib.packagesFromVersionsFile {
                     plugins = { ... };
                     skipMissingPlugins = true;
                     ...
@@ -56,9 +56,21 @@
                 lib.warnIf
                 (!hasPlugin) "Skipping \"${name}\" plugin"
                 hasPlugin);
-          findPackages = builtins.mapAttrs (plugin: version: plugins.${plugin} {
-            inherit system version;
-          });
+          findPackages = builtins.mapAttrs
+            (name: version:
+              let
+                plugin = plugins.${name};
+              in
+              lib.throwIf (!plugin.hasVersion { inherit system version; }) ''
+                Plugin "${name}" does not provide version "${version}", try
+                updating the plugin's input:
+
+                ```
+                > nix flake lock --update-input <asdf2nix-${name}>
+                ```
+              ''
+                plugin.packageFromVersion
+                { inherit system version; });
         in
         findPackages
           (builtins.listToAttrs
