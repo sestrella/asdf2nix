@@ -18,11 +18,11 @@
           parseVersions = builtins.map
             (line:
               let
-                pluginAndVersion = builtins.split " " line;
+                pluginAndVersion = lib.splitString " " line;
               in
               {
                 name = builtins.elemAt pluginAndVersion 0;
-                value = builtins.elemAt pluginAndVersion 2;
+                value = builtins.elemAt pluginAndVersion 1;
               });
           filterPlugins = builtins.filter
             ({ name, ... }:
