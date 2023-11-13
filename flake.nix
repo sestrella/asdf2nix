@@ -56,11 +56,11 @@
                 lib.warnIf
                 (!hasPlugin) "Skipping \"${name}\" plugin"
                 hasPlugin);
-          findPackage = plugin: version: plugins.${plugin} {
+          findPackages = builtins.mapAttrs (plugin: version: plugins.${plugin} {
             inherit system version;
-          };
+          });
         in
-        builtins.mapAttrs findPackage
+        findPackages
           (builtins.listToAttrs
             (filterPlugins
               (parseVersions
