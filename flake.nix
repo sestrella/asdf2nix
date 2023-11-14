@@ -22,7 +22,7 @@
               in
               {
                 name = builtins.elemAt pluginAndVersion 0;
-                value = builtins.elemAt pluginAndVersion 1;
+                version = builtins.elemAt pluginAndVersion 1;
               });
           filterPlugins = builtins.filter
             ({ name, ... }:
@@ -36,7 +36,7 @@
                   ```
                   <asdf2nix>.lib.packagesFromVersionsFile {
                     plugins = {
-                      ${name} = asdf2nix-${name}.lib.packageFromVersion;
+                      ${name} = <asdf2nix-${name}>.lib.packageFromVersion;
                       ...
                     };
                     ...
@@ -56,24 +56,28 @@
                 lib.warnIf
                 (!hasPlugin) "Skipping \"${name}\" plugin"
                 hasPlugin);
-          findPackages = builtins.mapAttrs
-            (name: version:
+          findPackages = builtins.map
+            ({ name, version }:
               let
                 plugin = plugins.${name};
               in
-              lib.throwIf (!plugin.hasVersion { inherit system version; }) ''
-                Plugin "${name}" does not provide version "${version}", try
-                updating the plugin's input:
+              lib.throwIf (!plugin.hasVersion { inherit system version; })
+                ''
+                  Plugin "${name}" does not provide version "${version}", try
+                  updating the plugin's input:
 
-                ```
-                > nix flake lock --update-input <asdf2nix-${name}>
-                ```
-              ''
-                plugin.packageFromVersion
-                { inherit system version; });
+                  ```
+                  > nix flake lock --update-input <asdf2nix-${name}>
+                  ```
+                ''
+                {
+                  inherit name;
+                  value = plugin.packageFromVersion { inherit system version; };
+                }
+            );
         in
-        findPackages
-          (builtins.listToAttrs
+        builtins.listToAttrs
+          (findPackages
             (filterPlugins
               (parseVersions
                 (removeComments
