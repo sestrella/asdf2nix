@@ -14,7 +14,7 @@
           inherit system;
           versionsFile = ./.tool-versions;
           plugins = {
-            python = asdf2nix-python.lib.packageFromVersion;
+            python = asdf2nix-python.lib;
           };
         };
       in
