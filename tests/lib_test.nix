@@ -109,8 +109,13 @@ in
   {
     name = ''
       Given:
+        - A versions file referencing some plugins
+        - A set of plugins matching all of them
       When:
+        - The matching plugin does not provide a package for the requested
+          version
       Then:
+        - Throws an error
     '';
     actual = builtins.tryEval (lib.packagesFromVersionsFile {
       versionsFile = builtins.toFile ".tool-versions" ''
@@ -128,8 +133,12 @@ in
   {
     name = ''
       Given:
+        - A versions file referencing some plugins
+        - A set of empty plugins
       When:
+        - There are no plugins available
       Then:
+        - Throws an error
     '';
     actual = builtins.tryEval (lib.packagesFromVersionsFile {
       versionsFile = builtins.toFile ".tool-versions" ''
