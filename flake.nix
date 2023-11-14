@@ -82,5 +82,10 @@
               (parseVersions
                 (removeComments
                   (fileLines versionsFile)))));
+
+      templates.default = {
+        description = "TODO";
+        path = ./templates/default;
+      };
     };
 }

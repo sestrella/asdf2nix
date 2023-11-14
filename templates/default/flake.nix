@@ -1,14 +1,12 @@
 {
   inputs = {
-    # TODO: Change to GH url
-    asdf2nix.url = "path:../..";
-    # TODO: Change to GH url
-    asdf2nix-python.url = "path:../../plugins/python";
+    asdf2nix-python.url = "github:sestrella/asdf2nix?dir=plugins/python";
+    asdf2nix.url = "github:sestrella/asdf2nix";
     flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   };
 
-  outputs = { self, asdf2nix, asdf2nix-python, flake-utils, nixpkgs }:
+  outputs = { self, asdf2nix-python, asdf2nix, flake-utils, nixpkgs }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
@@ -18,12 +16,11 @@
           plugins = {
             python = asdf2nix-python.lib.packageFromVersion;
           };
-          skipMissingPlugins = true;
         };
       in
       {
         devShells.default = pkgs.mkShell {
-          buildInputs = [ (builtins.attrValues packages) ];
+          buildInputs = [ packages.python ];
         };
       });
 }
