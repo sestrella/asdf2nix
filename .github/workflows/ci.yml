@@ -12,9 +12,9 @@ jobs:
       matrix:
         template:
           - name: default
-            command: python --version
+            test: nix develop --accept-flake-config -c python --version
           - name: devenv
-            command: python --version
+            test: nix develop --accept-flake-config --impure -c python --version
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,7 +24,7 @@ jobs:
         id: mktemp
       - run: nix flake init -t ${{ github.workspace }}#${{ matrix.template.name }}
         working-directory: ${{ steps.mktemp.outputs.tmpdir }}
-      - run: nix develop --accept-flake-config -c ${{ matrix.template.command }}
+      - run: ${{ matrix.template.test }}
         working-directory: ${{ steps.mktemp.outputs.tmpdir }}
 
   test:
