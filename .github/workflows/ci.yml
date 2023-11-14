@@ -23,8 +23,7 @@ jobs:
       - run: echo "tmpdir=$(mktemp -d)" >> "$GITHUB_OUTPUT"
         id: mktemp
 
-      - run: echo ${{ github.workspace }}
-      # - run: nix flake init -t ${{ github.workspace }}#default
-      #   working-directory: ${{ steps.mktemp.outputs.tmpdir }}
+      - run: nix flake init -t "${{ github.workspace }}#default"
+        working-directory: ${{ steps.mktemp.outputs.tmpdir }}
       # - run: nix flake show
       #   working-directory: ${{ steps.mktemp.outputs.tmpdir }}
