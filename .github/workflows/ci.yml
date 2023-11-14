@@ -16,7 +16,13 @@ jobs:
       - run: nix eval --impure .#tests
         working-directory: tests
 
-  template:
+  templates:
+    strategy:
+      matrix:
+        template:
+          - name: default
+            command: python --version
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,7 +30,7 @@ jobs:
       - run: sed -i 's/github:sestrella\/asdf2nix/github:sestrella\/asdf2nix\/${{ github.sha }}/g' templates/*/flake.nix
       - run: echo "tmpdir=$(mktemp -d)" >> "$GITHUB_OUTPUT"
         id: mktemp
-      - run: nix flake init -t ${{ github.workspace }}#default
+      - run: nix flake init -t ${{ github.workspace }}#${{ matrix.template.name }}
         working-directory: ${{ steps.mktemp.outputs.tmpdir }}
-      - run: nix develop --accept-flake-config -c python --version
+      - run: nix develop --accept-flake-config -c ${{ matrix.template.command }}
         working-directory: ${{ steps.mktemp.outputs.tmpdir }}
