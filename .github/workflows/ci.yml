@@ -7,22 +7,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
-    if: false
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: cachix/install-nix-action@v23
-      - run: nix eval --impure .#tests
-        working-directory: tests
-
   templates:
     strategy:
       matrix:
         template:
           - name: default
             command: python --version
-
+          - name: devenv
+            command: python --version
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -34,3 +26,12 @@ jobs:
         working-directory: ${{ steps.mktemp.outputs.tmpdir }}
       - run: nix develop --accept-flake-config -c ${{ matrix.template.command }}
         working-directory: ${{ steps.mktemp.outputs.tmpdir }}
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v23
+      - run: nix eval --impure .#tests
+        working-directory: tests
+

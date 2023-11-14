@@ -83,9 +83,15 @@
                 (removeComments
                   (fileLines versionsFile)))));
 
-      templates.default = {
-        description = "TODO";
-        path = ./templates/default;
+      templates = {
+        default = {
+          description = "TODO";
+          path = ./templates/default;
+        };
+        devenv = {
+          description = "TODO";
+          path = ./templates/devenv;
+        };
       };
     };
 }
