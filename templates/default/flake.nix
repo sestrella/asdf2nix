@@ -1,7 +1,9 @@
 {
   inputs = {
-    asdf2nix-python.url = "github:sestrella/asdf2nix?dir=plugins/python";
-    asdf2nix.url = "github:sestrella/asdf2nix";
+    # asdf2nix-python.url = "github:sestrella/asdf2nix?dir=plugins/python";
+    asdf2nix-python.url = "path:../../plugins/python";
+    # asdf2nix.url = "github:sestrella/asdf2nix";
+    asdf2nix.url = "path:../..";
     flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   };
