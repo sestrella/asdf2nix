@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v23
-      - run: echo "tmpdir=$(mktemp -d -s default)" >> "$GITHUB_OUTPUT"
+      - run: echo "tmpdir=$(mktemp -d)" >> "$GITHUB_OUTPUT"
         id: mktemp
       - run: nix flake init -t ${{ github.workspace }}#default
         working-directory: ${{ steps.mktemp.outputs.tmpdir }}
