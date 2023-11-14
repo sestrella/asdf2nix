@@ -22,6 +22,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v23
       - run: sed -i 's/github:sestrella\/asdf2nix/github:sestrella\/asdf2nix\/${{ github.sha }}/g' templates/*/flake.nix
+      - run: cat templates/default/flake.nix
       - run: git add --all
       - run: echo "tmpdir=$(mktemp -d)" >> "$GITHUB_OUTPUT"
         id: mktemp
