@@ -6,6 +6,11 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   };
 
+  nixConfig = {
+    extra-substituters = "https://cache.nixos.org https://nixpkgs-python.cachix.org";
+    extra-trusted-public-keys = "nixpkgs-python.cachix.org-1:hxjI7pFxTyuTHn2NkvWCrAUcNZLNS3ZAvfYNuYifcEU=";
+  };
+
   outputs = { self, asdf2nix-python, asdf2nix, flake-utils, nixpkgs }:
     flake-utils.lib.eachDefaultSystem (system:
       let
