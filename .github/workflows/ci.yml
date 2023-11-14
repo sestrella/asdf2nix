@@ -14,3 +14,10 @@ jobs:
       - uses: cachix/install-nix-action@v23
       - run: nix eval --impure .#tests
         working-directory: tests
+
+  template:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v23
+      - run: nix flake init -t .
