@@ -2,6 +2,7 @@
   inputs = {
     asdf2nix-python.url = "github:sestrella/asdf2nix?dir=plugins/python";
     asdf2nix.url = "github:sestrella/asdf2nix";
+    devenv.url = "github:cachix/devenv";
     flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   };
@@ -11,7 +12,7 @@
     extra-trusted-public-keys = "nixpkgs-python.cachix.org-1:hxjI7pFxTyuTHn2NkvWCrAUcNZLNS3ZAvfYNuYifcEU=";
   };
 
-  outputs = { self, asdf2nix-python, asdf2nix, flake-utils, nixpkgs }:
+  outputs = inputs@{ self, asdf2nix-python, asdf2nix, devenv, flake-utils, nixpkgs }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
@@ -24,8 +25,14 @@
         };
       in
       {
-        devShells.default = pkgs.mkShell {
-          buildInputs = [ packages.python ];
+        devShells.default = devenv.lib.mkShell {
+          inherit inputs pkgs;
+          modules = [
+            ({ pkgs, config, ... }: {
+              languages.python.enable = true;
+              languages.python.package = packages.python;
+            })
+          ];
         };
       });
 }

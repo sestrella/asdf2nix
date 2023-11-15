@@ -83,9 +83,15 @@
                 (removeComments
                   (fileLines versionsFile)))));
 
-      templates.default = {
-        description = "TODO";
-        path = ./templates/default;
+      templates = {
+        default = {
+          description = "Install Nix packages from asdf versions file";
+          path = ./templates/default;
+        };
+        devenv = {
+          description = "Integration with devenv";
+          path = ./templates/devenv;
+        };
       };
     };
 }
