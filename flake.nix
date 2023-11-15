@@ -85,11 +85,11 @@
 
       templates = {
         default = {
-          description = "TODO";
+          description = "Install Nix packages from asdf versions file";
           path = ./templates/default;
         };
         devenv = {
-          description = "TODO";
+          description = "Integration with devenv";
           path = ./templates/devenv;
         };
       };
