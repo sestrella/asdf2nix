@@ -45,13 +45,15 @@ nix flake init -t github:sestrella/asdf2nix
 The remainder of this section’s content will walk you through the scaffolding
 command’s output step by step.
 
-TODO: Talk about the main input
+The first input is from asdf2nix, which exposes the `packagesFromVersionsFile`
+function, which is used to retrieve a set of packages based on a versions file:
 
 ```nix
 inputs.asdf2nix.url = "github:sestrella/asdf2nix";
 ```
 
-TODO: How to add new plugins
+Because asdf2nix does not include all plugins, each plugin must be declared as
+a separate input. Here is an example of a Python plugin:
 
 ```nix
 inputs.asdf2nix-python.url = "github:sestrella/asdf2nix?dir=plugins/python";
@@ -61,7 +63,10 @@ inputs.asdf2nix-python.url = "github:sestrella/asdf2nix?dir=plugins/python";
 of a plugin can be copied from the [Python plugin](plugins/python) and stored
 in a different repository.
 
-TODO: Other inputs
+The following additional inputs are mentioned in the context of this example:
+
+- **[flake-utils]** - Pure Nix flake utility functions.
+- **[nixpkgs]** - Nix Packages collection & NixOS
 
 ```nix
 inputs.flake-utils.url = "github:numtide/flake-utils";
@@ -72,7 +77,7 @@ TODO: Binary cache
 
 ```nix
 nixConfig = {
-  extra-substituters = "https://cache.nixos.org https://nixpkgs-python.cachix.org";
+  extra-substituters = "https://nixpkgs-python.cachix.org";
   extra-trusted-public-keys = "nixpkgs-python.cachix.org-1:hxjI7pFxTyuTHn2NkvWCrAUcNZLNS3ZAvfYNuYifcEU=";
 };
 ```
@@ -116,4 +121,6 @@ functions:
 
 [MIT](LICENSE)
 
-[asdf]: https://asdf-vm.com/
+[asdf]: https://asdf-vm.com
+[flake-utils]: https://github.com/numtide/flake-utils
+[nixpkgs]: https://github.com/nixos/nixpkgs
