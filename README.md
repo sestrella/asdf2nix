@@ -73,7 +73,10 @@ inputs.flake-utils.url = "github:numtide/flake-utils";
 inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 ```
 
-TODO: Binary cache
+The previously described `asdf2nix-python` plugin relies on a flake that stores
+pre-compiled binaries in a cache, adding the binary cache configuration to the
+`flake.nix` file would significantly speed up the process of obtaining packages
+from this source:
 
 ```nix
 nixConfig = {
@@ -82,13 +85,11 @@ nixConfig = {
 };
 ```
 
-TODO: Brief overview of `flake-utils`
-
-```nix
-flake-utils.lib.eachDefaultSystem (system: ...)
-```
-
-TODO: Describe packagesFromVersionsFile
+The following code snippet uses [flake-utils] to loop over a set of [default
+systems](https://github.com/nix-systems/default) to call
+`packagesFromVersionsFile`, which is the main function exposed by asdf2nix and
+takes care of parsing the versions file and fetching the corresponding packages
+using the provided plugins:
 
 ```nix
 packages = asdf2nix.lib.packagesFromVersionsFile {
@@ -100,13 +101,17 @@ packages = asdf2nix.lib.packagesFromVersionsFile {
 }
 ```
 
-TODO: nix-shell usage
+Finally, the output of `packagesFromVersionsFile` could be used to build a
+[nix-shell].
 
 ```nix
 devShells.default = pkgs.mkShell {
   buildInputs = [ packages.python ];
 };
 ```
+
+**Note:** It is worth noting that the value returned by
+`packagesFromVersionsFile` is of the form `{ “<plugin>” = <package> }`.
 
 ## Plugins
 
