@@ -119,9 +119,9 @@ In an asdf2nix context, a plugin’s primary goal is to determine whether a
 package version exists and to retrieve it. Plugins are made up of the following
 functions:
 
-- **hasVersion** - Checks if the requested version of a package is provided by
+- `hasVersion` - Checks if the requested version of a package is provided by
   the plugin.
-- **packageFromVersion** - Retrieves a package that matches a specific version.
+- `packageFromVersion` - Retrieves a package that matches a specific version.
 
 For more information on how to structure a plugin, see the [Python
 plugin](plugins/python).
