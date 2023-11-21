@@ -111,7 +111,8 @@ devShells.default = pkgs.mkShell {
 ```
 
 **Note:** It is worth noting that the value returned by
-`packagesFromVersionsFile` is of the form `{ “<plugin>” = <package> }`.
+`packagesFromVersionsFile` is of the form `{ “<plugin-1>” = <package-1>;
+"<plugin-2>" = <package-2>; ... }`.
 
 ## Plugins
 
