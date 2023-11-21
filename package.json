@@ -1,0 +1,6 @@
+{
+  "name": "asdf2nix",
+  "dependencies": {
+    "semantic-release": "^22.0.8"
+  }
+}

@@ -1,13 +1,26 @@
-name: CI
+name: Build
 
 on: push
 
 concurrency:
-  group: ci-${{ github.ref }}
+  group: build-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install Nix
+        uses: cachix/install-nix-action@v23
+      - name: Run tests
+        run: nix eval --impure .#tests
+        working-directory: tests
+
   templates:
+    runs-on: ubuntu-latest
+    needs: [test]
     strategy:
       matrix:
         template:
@@ -15,7 +28,6 @@ jobs:
             test: nix develop --accept-flake-config -c python --version
           - name: devenv
             test: nix develop --accept-flake-config --impure -c python --version
-    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -32,15 +44,4 @@ jobs:
       - name: Run smoke test
         run: ${{ matrix.template.test }}
         working-directory: ${{ steps.mktemp.outputs.tmpdir }}
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Install Nix
-        uses: cachix/install-nix-action@v23
-      - name: Run tests
-        run: nix eval --impure .#tests
-        working-directory: tests
 
