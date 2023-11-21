@@ -1,1 +1,3 @@
+.direnv
+node_modules
 templates/*/flake.lock
