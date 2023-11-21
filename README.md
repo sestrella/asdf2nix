@@ -20,8 +20,8 @@ features:
 
 Before you proceed, keep in mind that asdf currently supports a [wide range of
 plugins](https://github.com/asdf-vm/asdf-plugins) that asdf2nix does not; while
-some workarounds are detailed in the following sections, some of them require a
-deeper understanding of Nix.
+some workarounds are detailed in the [following sections](#missing-plugins),
+some of them require a deeper understanding of Nix.
 
 ### Key Differences
 
