@@ -139,7 +139,21 @@ functions:
 For more information on how to structure a plugin, see the [Python
 plugin](plugins/python).
 
-TODO: Workaround for missing plugins
+### Missing Plugins
+
+This section describes some workarounds for scenarios in which an asdf2nix
+plugin for a specific tool is still unavailable. Here are some possible
+workarounds:
+
+- **Pull an existing package from nixpkgs** - This method makes use of the Nix
+  binary cache by retrieving a pre-built package from it; however, the package
+  version may be slightly out-of-date. Take a look at the following
+  [example](templates/nodejs-from-nixpkgs).
+- **Override the version of an existing package** - This approach provides more
+  flexibility because it allows users to select the version of a package that
+  they want at the expense of more computational power if the package is not
+  available in a binary cache because it would be built from scratch. Take a
+  look at the following [example](templates/nodejs-override-version).
 
 ## License
 
