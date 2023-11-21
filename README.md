@@ -13,7 +13,8 @@ features:
 - **Transition to Nix** - asdf2nix is intended to be used as a bridge tool for
   asdf users who want to try Nix without investing heavily in setting up a
   completely new development environment with Nix.
-- **Friendly error messages** - TODO
+- **Friendly error messages** - The majority of error messages contain hints on
+  how to work around them in order to improve the development experience.
 
 ## Disclaimer
 
@@ -22,7 +23,18 @@ plugins](https://github.com/asdf-vm/asdf-plugins) that asdf2nix does not; while
 some workarounds are detailed in the following sections, some of them require a
 deeper understanding of Nix.
 
-TODO: Talk about major differences with asdf
+### Key Differences
+
+- **Up-to-date versions** - Unlike asdf plugins, asdf2nix plugins do not obtain
+  the list of versions directly from an official upstream; thus, the available
+  packages may be slightly out-of-date when compared to their counterpart
+  plugins.
+- **Plugins repository** - In contrast to asdf, there is no central repository
+  containing all references to existing plugins; users may have to rely on
+  GitHub or a Nix flake registry to locate specific plugins.
+- **Reproducibility** - Because Nix values reproducibility, alias versions of
+  the form `x.y` or `x` may not be supported by all plugins due to their
+  mutability.
 
 ## Getting Started
 
@@ -126,6 +138,8 @@ functions:
 
 For more information on how to structure a plugin, see the [Python
 plugin](plugins/python).
+
+TODO: Workaround for missing plugins
 
 ## License
 
