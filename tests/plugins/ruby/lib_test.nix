@@ -1,10 +1,10 @@
 let
-  lib = (builtins.getFlake (builtins.toString ./../../../plugins/python)).lib;
+  lib = (builtins.getFlake (builtins.toString ./../../../plugins/ruby)).lib;
 in
 [
   {
     name = "When the version exists returns true";
-    actual = lib.hasVersion { version = "3.12.0"; };
+    actual = lib.hasVersion { version = "3.2.2"; };
     expected = true;
   }
   {
@@ -14,7 +14,7 @@ in
   }
   {
     name = "When the version exists returns a package";
-    actual = (lib.packageFromVersion { version = "3.12.0"; }).name;
-    expected = "python3-3.12.0";
+    actual = (lib.packageFromVersion { version = "3.2.2"; }).name;
+    expected = "ruby-3.2.2";
   }
 ]
