@@ -15,8 +15,7 @@ jobs:
       - name: Install Nix
         uses: cachix/install-nix-action@v23
       - name: Run tests
-        run: nix eval --impure .#tests
-        working-directory: tests
+        run: devenv shell -- tests
 
   templates:
     runs-on: ubuntu-latest
