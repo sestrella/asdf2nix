@@ -14,9 +14,12 @@ jobs:
         uses: actions/checkout@v4
       - name: Install Nix
         uses: cachix/install-nix-action@v23
-      - run: nix-env -iA cachix -f https://cachix.org/api/v1/install
-      - run: cachix use devenv
-      - run: nix-env -if https://install.devenv.sh/latest
+      - name: Install Cachix
+        run: nix-env -iA cachix -f https://cachix.org/api/v1/install
+      - name: Setup Cachix
+        run: cachix use devenv
+      - name: Install devenv
+        run: nix-env -if https://install.devenv.sh/latest
       - name: Run tests
         run: devenv shell -- tests
 
