@@ -1,5 +1,5 @@
 inputs:
   nixpkgs:
-    url: github:NixOS/nixpkgs/nixpkgs-unstable
+    url: github:nixos/nixpkgs/nixpkgs-unstable
   nixtest:
     url: github:jetpack-io/nixtest
