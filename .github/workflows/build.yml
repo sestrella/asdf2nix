@@ -24,7 +24,6 @@ jobs:
         run: devenv shell -- tests
 
   templates:
-    if: false
     runs-on: ubuntu-latest
     needs: [test]
     strategy:
