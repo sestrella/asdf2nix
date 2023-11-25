@@ -7,7 +7,8 @@
     in
     {
       lib.packagesFromVersionsFile =
-        { versionsFile
+        { versionsFile ? null
+        , legacyVersionFiles ? { }
         , system ? builtins.currentSystem
         , plugins ? { }
         , skipMissingPlugins ? false
@@ -22,10 +23,46 @@
               in
               {
                 name = builtins.elemAt pluginAndVersion 0;
-                version = builtins.elemAt pluginAndVersion 1;
+                value = builtins.elemAt pluginAndVersion 1;
               });
-          filterPlugins = builtins.filter
-            ({ name, ... }:
+          toolVersions =
+            if versionsFile == null
+            then { }
+            else
+              builtins.listToAttrs
+                (parseVersions
+                  (removeComments
+                    (fileLines versionsFile)));
+          legacyVersions =
+            builtins.mapAttrs
+              (_: file: lib.fileContents file)
+              legacyVersionFiles;
+          versions =
+            lib.throwIf (versionsFile == null && legacyVersionFiles == { })
+              ''
+                No version files provided. Try with `versionsFile`:
+
+                ```
+                packagesFromVersionsFile {
+                  versionsFile = ./.tool-versions;
+                  ...
+                }
+                ```
+
+                Or `legacyVersionFiles`:
+
+                ```
+                packagesFromVersionsFile {
+                  legacyVersionFiles = {
+                    python = ./.python-version;
+                  };
+                  ...
+                }
+                ```
+              ''
+              toolVersions // legacyVersions;
+          filterPlugins = lib.filterAttrs
+            (name: _:
               let
                 hasPlugin = builtins.hasAttr name plugins;
               in
@@ -56,8 +93,8 @@
                 lib.warnIf
                 (!hasPlugin) "Skipping \"${name}\" plugin"
                 hasPlugin);
-          findPackages = builtins.map
-            ({ name, version }:
+          findPackages = builtins.mapAttrs
+            (name: version:
               let
                 plugin = plugins.${name};
               in
@@ -70,18 +107,13 @@
                   > nix flake lock --update-input <asdf2nix-${name}>
                   ```
                 ''
+                plugin.packageFromVersion
                 {
-                  inherit name;
-                  value = plugin.packageFromVersion { inherit system version; };
+                  inherit system version;
                 }
             );
         in
-        builtins.listToAttrs
-          (findPackages
-            (filterPlugins
-              (parseVersions
-                (removeComments
-                  (fileLines versionsFile)))));
+        findPackages (filterPlugins versions);
 
       templates = {
         default = {

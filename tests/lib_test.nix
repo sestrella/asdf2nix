@@ -2,30 +2,12 @@ let
   lib = (builtins.getFlake (builtins.toString ./..)).lib;
 in
 [
+  # comments
   {
-    name = "Ignores comment lines";
-    actual = lib.packagesFromVersionsFile {
-      versionsFile = builtins.toFile ".tool-versions" ''
-        # This is a comment
-        python 3.12.0
-        # This is another comment
-        terraform 1.6.3
-      '';
-      plugins = {
-        python = {
-          hasVersion = _: true;
-          packageFromVersion = { version, ... }: version;
-        };
-        terraform = {
-          hasVersion = _: true;
-          packageFromVersion = { version, ... }: version;
-        };
-      };
-    };
-    expected = { python = "3.12.0"; terraform = "1.6.3"; };
-  }
-  {
-    name = "Ignores inline comments";
+    name = ''
+      When versionsFile contain comments, then it ignores those during the
+      parsing
+    '';
     actual = lib.packagesFromVersionsFile {
       versionsFile = builtins.toFile ".tool-versions" ''
         # This is a comment
@@ -45,17 +27,96 @@ in
     };
     expected = { python = "3.12.0"; terraform = "1.6.3"; };
   }
+  # legacyVersionFiles
+  {
+    name = ''
+      When neither versionsFile nor legacyVersionFiles are provided, then
+      throws an error
+    '';
+    actual = builtins.tryEval (lib.packagesFromVersionsFile { });
+    expected = { success = false; value = false; };
+  }
+  {
+    name = ''
+      When only legacyVersionFiles is provided, then returns the package
+      matching the requested version
+    '';
+    actual = lib.packagesFromVersionsFile {
+      legacyVersionFiles = {
+        python = builtins.toFile ".python-version" ''
+          3.12.0
+        '';
+      };
+      plugins = {
+        python = {
+          hasVersion = _: true;
+          packageFromVersion = { version, ... }: version;
+        };
+      };
+    };
+    expected = { python = "3.12.0"; };
+  }
+  {
+    name = ''
+      When both versionsFile and legacyVersionFiles are provided and the
+      plugins does not overlap, then returns packages specified in both files
+    '';
+    actual = lib.packagesFromVersionsFile {
+      versionsFile = builtins.toFile ".tool-versions" ''
+        terraform 1.6.3
+      '';
+      legacyVersionFiles = {
+        python = builtins.toFile ".python-version" ''
+          3.12.0
+        '';
+      };
+      plugins = {
+        python = {
+          hasVersion = _: true;
+          packageFromVersion = { version, ... }: version;
+        };
+        terraform = {
+          hasVersion = _: true;
+          packageFromVersion = { version, ... }: version;
+        };
+      };
+    };
+    expected = { python = "3.12.0"; terraform = "1.6.3"; };
+  }
+  {
+    name = ''
+      When both versionsFile and legacyVersionFiles are provided and the
+      plugins overlap, then the version of the tool coming from the legacy file
+      takes more precedence
+    '';
+    actual = lib.packagesFromVersionsFile {
+      versionsFile = builtins.toFile ".tool-versions" ''
+        python 2.7.6
+        terraform 1.6.3
+      '';
+      legacyVersionFiles = {
+        python = builtins.toFile ".python-version" ''
+          3.12.0
+        '';
+      };
+      plugins = {
+        python = {
+          hasVersion = _: true;
+          packageFromVersion = { version, ... }: version;
+        };
+        terraform = {
+          hasVersion = _: true;
+          packageFromVersion = { version, ... }: version;
+        };
+      };
+    };
+    expected = { python = "3.12.0"; terraform = "1.6.3"; };
+  }
   # skipMissingPlugins = false
   {
     name = ''
-      Given:
-        - A versions file referencing some plugins
-        - A set of plugins matching only one of them
-        - A feature flag to skip missing plugins
-      When:
-        - The matching plugin provides a package for the requested version
-      Then:
-        - Returns a set with the retrieved package
+      When skipMissingPlugins is enabled and some plugins are missing, then
+      returns packages only for the ones matching
     '';
     actual = lib.packagesFromVersionsFile {
       versionsFile = builtins.toFile ".tool-versions" ''
@@ -74,15 +135,8 @@ in
   }
   {
     name = ''
-      Given:
-        - A versions file referencing some plugins
-        - A set of plugins matching only one of them
-        - A feature flag to skip missing plugins
-      When:
-        - The matching plugin does not provide a package for the requested
-          version
-      Then:
-        - Throws an error
+      When skipMissingPlugins is enabled and all plugins are provided, then it
+      returns all the packages
     '';
     actual = builtins.tryEval (
       (lib.packagesFromVersionsFile {
@@ -96,20 +150,14 @@ in
           };
         };
         skipMissingPlugins = true;
-      })
+      }).python
     );
     expected = { success = false; value = false; };
   }
   {
     name = ''
-      Given:
-        - A versions file referencing some plugins
-        - A set of empty plugins
-        - A feature flag to skip missing plugins
-      When:
-        - There are no plugins available
-      Then:
-        - Returns an empty set
+      When skipMissingPlugins is enabled and no plugins are provided, then
+      returns an empty set
     '';
     actual = lib.packagesFromVersionsFile {
       versionsFile = builtins.toFile ".tool-versions" ''
@@ -123,13 +171,8 @@ in
   # skipMissingPlugins = false
   {
     name = ''
-      Given:
-        - A versions file referencing some plugins
-        - A set of plugins matching all of them
-      When:
-        - The matching plugins provide packages for the requested versions
-      Then:
-        - Returns a set with the retrieved packages
+      When skipMissingPlugins is disabled and all plugins are provided, then
+      returns all packages
     '';
     actual = lib.packagesFromVersionsFile {
       versionsFile = builtins.toFile ".tool-versions" ''
@@ -149,39 +192,30 @@ in
     };
     expected = { python = "3.12.0"; terraform = "1.6.3"; };
   }
+  # hasVersions
   {
     name = ''
-      Given:
-        - A versions file referencing some plugins
-        - A set of plugins matching all of them
-      When:
-        - The matching plugin does not provide a package for the requested
-          version
-      Then:
-        - Throws an error
+      When the provided plugin does not contain the requested version, then
+      throws an error
     '';
-    actual = builtins.tryEval (lib.packagesFromVersionsFile {
-      versionsFile = builtins.toFile ".tool-versions" ''
-        python 3.12.0
-      '';
-      plugins = {
-        python = {
-          hasVersion = _: false;
-          packageFromVersion = { version, ... }: version;
+    actual = builtins.tryEval (
+      (lib.packagesFromVersionsFile {
+        versionsFile = builtins.toFile ".tool-versions" ''
+          python 3.12.0
+        '';
+        plugins = {
+          python = {
+            hasVersion = _: false;
+            packageFromVersion = { version, ... }: version;
+          };
         };
-      };
-    });
+      }).python
+    );
     expected = { success = false; value = false; };
   }
   {
     name = ''
-      Given:
-        - A versions file referencing some plugins
-        - A set of empty plugins
-      When:
-        - There are no plugins available
-      Then:
-        - Throws an error
+      When no plugins are provided, then throws an error
     '';
     actual = builtins.tryEval (lib.packagesFromVersionsFile {
       versionsFile = builtins.toFile ".tool-versions" ''
