@@ -2,6 +2,49 @@ let
   lib = (builtins.getFlake (builtins.toString ./..)).lib;
 in
 [
+  {
+    name = "Ignores comment lines";
+    actual = lib.packagesFromVersionsFile {
+      versionsFile = builtins.toFile ".tool-versions" ''
+        # This is a comment
+        python 3.12.0
+        # This is another comment
+        terraform 1.6.3
+      '';
+      plugins = {
+        python = {
+          hasVersion = _: true;
+          packageFromVersion = { version, ... }: version;
+        };
+        terraform = {
+          hasVersion = _: true;
+          packageFromVersion = { version, ... }: version;
+        };
+      };
+    };
+    expected = { python = "3.12.0"; terraform = "1.6.3"; };
+  }
+  {
+    name = "Ignores inline comments";
+    actual = lib.packagesFromVersionsFile {
+      versionsFile = builtins.toFile ".tool-versions" ''
+        # This is a comment
+        python 3.12.0 # This is another comment
+        terraform 1.6.3
+      '';
+      plugins = {
+        python = {
+          hasVersion = _: true;
+          packageFromVersion = { version, ... }: version;
+        };
+        terraform = {
+          hasVersion = _: true;
+          packageFromVersion = { version, ... }: version;
+        };
+      };
+    };
+    expected = { python = "3.12.0"; terraform = "1.6.3"; };
+  }
   # skipMissingPlugins = false
   {
     name = ''
