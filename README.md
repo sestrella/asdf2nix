@@ -127,6 +127,14 @@ devShells.default = pkgs.mkShell {
 `packagesFromVersionsFile` is of the form `{ “<plugin-1>” = <package-1>;
 "<plugin-2>" = <package-2>; ... }`.
 
+## Version Files
+
+As of version `2.1.0`, asdf2nix now supports legacy version files in the same
+way that
+[asdf](https://asdf-vm.com/manage/configuration.html#legacy-version-file) does.
+Check the version files [test suite](tests/version_files_test.nix) for more
+information on how this feature works.
+
 ## Plugins
 
 In an asdf2nix context, a plugin’s primary goal is to determine whether a
