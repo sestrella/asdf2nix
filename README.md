@@ -127,6 +127,127 @@ devShells.default = pkgs.mkShell {
 `packagesFromVersionsFile` is of the form `{ “<plugin-1>” = <package-1>;
 "<plugin-2>" = <package-2>; ... }`.
 
+## Version Files
+
+As of version `2.1.0`, asdf2nix now supports legacy version files in the same
+way that
+[asdf](https://asdf-vm.com/manage/configuration.html#legacy-version-file) does.
+The following scenarios describe how this feature works:
+
+**Scenario 1: When only `versionsFile` is provided**
+
+Given the following version file:
+
+```sh
+> cat .tool-versions
+python 3.12.0
+```
+
+A code snippet that looks as follows:
+
+```nix
+asdf2nix.lib.packagesFromVersionsFile {
+  versionsFile = ./.tool-versions;
+  plugins = { ... };
+};
+```
+
+Would produce the following outcome:
+
+```nix
+{ python = <python-3.12.0>; };
+```
+
+**Scenario 2: When both `versionsFile` and  `legacyVersionFiles` are provided
+and the are no plugins overlapping**
+
+Given the following version files:
+
+```sh
+> cat .tool-versions
+terraform 1.6.3
+> cat .python-version
+3.12.0
+```
+
+A code snippet that looks as follows:
+
+```nix
+asdf2nix.lib.packagesFromVersionsFile {
+  versionsFile = ./.tool-versions;
+  legacyVersionFiles = {
+    python = ./.python-version;
+  };
+  plugins = { ... };
+};
+```
+
+Would produce the following outcome:
+
+```nix
+{ python = <python-3.12.0>; terraform = <terraform-1.6.3>; };
+```
+
+**Scenario 3: When both `versionsFile` and `legacyVersionFiles` are provided
+and there are plugins overlapping**
+
+Given the following version files:
+
+```sh
+> cat .tool-versions
+python 2.7.6
+terraform 1.6.3
+> cat .python-version
+3.12.0
+```
+
+A code snippet that looks as follows:
+
+```nix
+asdf2nix.lib.packagesFromVersionsFile {
+  versionsFile = ./.tool-versions;
+  legacyVersionFiles = {
+    python = ./.python-version;
+  };
+  plugins = { ... };
+};
+```
+
+Would produce the following outcome:
+
+```nix
+{ python = <python-3.12.0>; terraform = <terraform-1.6.3>; };
+```
+
+**Note:** The Python version specified in `.python-versions` takes more
+precedence over the one in `.tool-versions`.
+
+**Scenario 4: When only `legacyVersionFiles` is provided**
+
+Given the following version file:
+
+```sh
+> cat .python-version
+3.12.0
+```
+
+A code snippet that looks as follows:
+
+```nix
+asdf2nix.lib.packagesFromVersionsFile {
+  legacyVersionFiles = {
+    python = ./.python-version;
+  };
+  plugins = { ... };
+};
+```
+
+Would produce the following outcome:
+
+```nix
+{ python = <python-3.12.0>; };
+```
+
 ## Plugins
 
 In an asdf2nix context, a plugin’s primary goal is to determine whether a
