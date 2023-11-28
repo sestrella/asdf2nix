@@ -168,6 +168,9 @@ workarounds:
 
 [MIT](LICENSE)
 
+---
+
 [asdf]: https://asdf-vm.com
 [flake-utils]: https://github.com/numtide/flake-utils
+[nix-shell]: https://nixos.wiki/wiki/Development_environment_with_nix-shell
 [nixpkgs]: https://github.com/nixos/nixpkgs
