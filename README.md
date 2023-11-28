@@ -5,6 +5,7 @@
 [![Publish](https://github.com/sestrella/asdf2nix/actions/workflows/publish.yml/badge.svg)](https://github.com/sestrella/asdf2nix/actions/workflows/publish.yml)
 
 [![FlakeHub](https://img.shields.io/endpoint?url=https://flakehub.com/f/sestrella/asdf2nix/badge)](https://flakehub.com/flake/sestrella/asdf2nix)
+[![flakestry.dev](https://flakestry.dev/flake/github/sestrella/asdf2nix)](https://flakestry.dev/api/badge/flake/github/sestrella/asdf2nix)
 
 asdf2nix is a tool designed for [asdf] users who want to experiment with
 nix-shells, as well as former Nix users who want to simplify package version
