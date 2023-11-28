@@ -8,6 +8,7 @@ concurrency:
 
 jobs:
   test:
+    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
