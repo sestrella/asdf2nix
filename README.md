@@ -2,6 +2,7 @@
 
 [![Build](https://github.com/sestrella/asdf2nix/actions/workflows/build.yml/badge.svg)](https://github.com/sestrella/asdf2nix/actions/workflows/build.yml)
 [![Release](https://github.com/sestrella/asdf2nix/actions/workflows/release.yml/badge.svg)](https://github.com/sestrella/asdf2nix/actions/workflows/release.yml)
+[![Publish](https://github.com/sestrella/asdf2nix/actions/workflows/publish.yml/badge.svg)](https://github.com/sestrella/asdf2nix/actions/workflows/publish.yml)
 
 asdf2nix is a tool designed for [asdf] users who want to experiment with
 nix-shells, as well as former Nix users who want to simplify package version
