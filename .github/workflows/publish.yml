@@ -19,6 +19,7 @@ permissions:
   contents: read
 
 jobs:
+  # https://flakehub.com/new
   flakehub:
     runs-on: ubuntu-latest
     steps:
@@ -33,6 +34,7 @@ jobs:
         with:
           tag: ${{ inputs.tag || github.ref_name }}
 
+  # https://flakestry.dev/publish
   flakestry:
     runs-on: ubuntu-latest
     steps:
