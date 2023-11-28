@@ -13,8 +13,10 @@ jobs:
       id-token: write
       contents: read
     steps:
-      # - name: Checkout code
-      #   uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: v1.0.0
       - name: Publish flake
         uses: determinatesystems/flakehub-push@main
         with:
