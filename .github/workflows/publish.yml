@@ -1,0 +1,22 @@
+name: Publish
+
+on: push
+
+concurrency:
+  group: publish
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      # - name: Checkout code
+      #   uses: actions/checkout@v4
+      - name: Publish flake
+        uses: determinatesystems/flakehub-push@main
+        with:
+          tag: v1.0.0
+          visibility: unlisted
