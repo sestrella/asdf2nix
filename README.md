@@ -78,8 +78,8 @@ in a different repository.
 
 The following additional inputs are mentioned in the context of this example:
 
-- **[flake-utils]** - Pure Nix flake utility functions.
-- **[nixpkgs]** - Nix Packages collection & NixOS
+- [flake-utils] - Pure Nix flake utility functions.
+- [nixpkgs] - Nix Packages collection & NixOS
 
 ```nix
 inputs.flake-utils.url = "github:numtide/flake-utils";
