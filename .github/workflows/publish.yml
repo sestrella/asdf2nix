@@ -9,6 +9,13 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version:
+          - v1.0.0
+          - v1.1.0
+          - v2.0.0
+          - v2.1.0
     permissions:
       id-token: write
       contents: read
@@ -16,11 +23,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: v1.0.0
+          ref: ${{ matrix.version }}
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
       - name: Publish flake
         uses: DeterminateSystems/flakehub-push@main
         with:
-          tag: v1.0.0
-          visibility: unlisted
+          tag: ${{ matrix.version }}
+          visibility: listed
