@@ -13,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Install Nix
-        uses: cachix/install-nix-action@v23
+        uses: cachix/install-nix-action@v24
       - name: Setup Cachix
         uses: cachix/cachix-action@v13
         with:
@@ -37,7 +37,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Install Nix
-        uses: cachix/install-nix-action@v23
+        uses: cachix/install-nix-action@v24
       - name: Replace inputs on templates
         run: sed -i 's/github:sestrella\/asdf2nix/github:sestrella\/asdf2nix\/${{ github.sha }}/g' templates/*/flake.nix
       - name: Create a temporary directory
