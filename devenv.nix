@@ -1,4 +1,4 @@
-{ pkgs, nixtest, ... }:
+{ nixtest, ... }:
 
 {
   scripts.tests.exec = ''
